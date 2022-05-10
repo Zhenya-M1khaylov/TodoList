@@ -1,4 +1,5 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import {Button, TextField} from '@mui/material';
 
 export type FullInputPropsType = {
     callBack: (newTitle: string) => void
@@ -7,13 +8,13 @@ export type FullInputPropsType = {
 export const FullInput = (props: FullInputPropsType) => {
 
     let [title, setTitle] = useState('')
-    let [error, setError] = useState<string | null>(null)
+    let [error, setError] = useState<boolean>(false)
 
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.currentTarget.value)
     }
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        setError(null);
+        setError(false);
         if (e.key === 'Enter') {
             addTask();
         }
@@ -24,19 +25,33 @@ export const FullInput = (props: FullInputPropsType) => {
             props.callBack(newTitle);
             setTitle('');
         } else {
-            setError('Title is required');
+            setError(true);
         }
     }
 
     return (
         <div>
-            <input value={title}
-                   onChange={onChangeHandler}
-                   onKeyPress={onKeyPressHandler}
-                   className={error ? "error" : ""}
+            {/*<input value={title}*/}
+            {/*       onChange={onChangeHandler}*/}
+            {/*       onKeyPress={onKeyPressHandler}*/}
+            {/*       className={error ? "error" : ""}*/}
+            {/*/>*/}
+            <TextField id="outlined-basic"
+                       label={error ? 'Title is required' : `Text`}
+                       variant="outlined"
+                       value={title}
+                       onChange={onChangeHandler}
+                       onKeyPress={onKeyPressHandler}
+                       size='small'
+                       error={error}
+                       helperText={'Title is required'}
             />
-            <button onClick={addTask}>+</button>
-            {error && <div className="error-message">{error}</div>}
+            {/*<button onClick={addTask}>+</button>*/}
+            <Button onClick={addTask} color={'primary'}
+                    variant="contained"
+                    style={{maxWidth: '39px', maxHeight: '39px', minWidth: '39px', minHeight: '39px'}}
+            >+</Button>
+            {/*{error && <div className="error-message">{error}</div>}*/}
         </div>
     );
 }
