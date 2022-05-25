@@ -1,5 +1,5 @@
 import React, {ChangeEvent} from 'react';
-import {FilterValuesType, TodolistsType} from './App';
+import {FilterValuesType, TodolistType} from './App';
 import {FullInput} from './Components/FullInput';
 import {EditableSpan} from './Components/EditableSpan';
 import {Delete} from '@mui/icons-material';
@@ -21,8 +21,8 @@ type PropsType = {
     addTask: (todolistID: string, title: string) => void
     changeTaskStatus: (todolistID: string, taskId: string, isDone: boolean) => void
     filter: FilterValuesType
-    setTodolists: (todolists: Array<TodolistsType>) => void
-    todolists: Array<TodolistsType>
+    setTodolists: (todolists: Array<TodolistType>) => void
+    todolists: Array<TodolistType>
     removeTodolist: (todolistID: string) => void
     editTodolist: (todolistId: string, newTitle: string)=> void
     editTask: (todolistId: string, taskID: string, newTitle: string)=> void
