@@ -1,6 +1,6 @@
-import {TasksType} from '../App';
+import {TasksStateType} from '../App';
 import {v1} from 'uuid';
-import {addTodolistAC, removeTodolistAC} from './todolistReducer';
+import {addTodolistAC, removeTodolistAC} from './todolists-reducer';
 
 
 export type RemoveTaskActionType = ReturnType<typeof removeTaskAC>
@@ -10,6 +10,7 @@ export type ChangeTitleActionType = ReturnType<typeof changeTitleStatusAC>
 export type AddTodolistActionType = ReturnType<typeof addTodolistAC>
 export type RemoveTodolistActionType = ReturnType<typeof removeTodolistAC>
 
+const initialState: TasksStateType = {}
 
 type ActionsType = RemoveTaskActionType
     | AddTaskActionType
@@ -18,7 +19,7 @@ type ActionsType = RemoveTaskActionType
     | AddTodolistActionType
     | RemoveTodolistActionType
 
-export const tasksReducer = (state: TasksType, action: ActionsType): TasksType => {
+export const tasksReducer = (state = initialState, action: ActionsType): TasksStateType => {
     switch (action.type) {
         case 'REMOVE-TASK':
             return {
@@ -35,7 +36,7 @@ export const tasksReducer = (state: TasksType, action: ActionsType): TasksType =
                 ...state,
                 [action.todolistId]: state[action.todolistId].map(t=>t.id === action.taskID ? {...t, isDone: action.isDone}: t)
             }
-            case 'CHANGE-TITLE-STATUS':
+        case 'CHANGE-TITLE-STATUS':
             return {
                 ...state,
                 [action.todolistId]: state[action.todolistId].map(t=>t.id === action.taskID ? {...t, title: action.title}: t)
@@ -43,15 +44,15 @@ export const tasksReducer = (state: TasksType, action: ActionsType): TasksType =
         case 'ADD-TODOLIST':
             return {
                 ...state,
-                [action.payload.todolistId]: []
+                [action.todolistId]: []
             }
         case 'REMOVE-TODOLIST':
-                // let {[action.payload.todolistId]:[], ...rest}= {...state}
+            // let {[action.payload.todolistId]:[], ...rest}= {...state}
             let copyState = {...state}
-                delete copyState[action.payload.todolistId]
-                return copyState
+            delete copyState[action.todolistId]
+            return copyState
         default:
-            throw new Error('I don\'t understand this type')
+            return state
     }
 }
 
