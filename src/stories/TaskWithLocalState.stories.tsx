@@ -5,7 +5,6 @@ import {Task} from '../Components/Task';
 import {TaskType} from '../Todolist';
 
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
     title: 'TODOLISTS/TaskWithLocalState',
     component: Task,
@@ -29,12 +28,11 @@ const TaskWithLocalState = () => {
 }
 
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<typeof TaskWithLocalState> = (args) => <TaskWithLocalState />;
 
 
 export const TaskWithLocalStateStories = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
+
 TaskWithLocalStateStories.args = {
     task: {id: 'id1', isDone: false, title: 'HTML'},
 };
