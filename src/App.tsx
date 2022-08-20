@@ -1,15 +1,11 @@
 import React, {useState} from 'react';
 import './App.css';
-import {TaskType, Todolist} from './Todolist';
+import {Todolist} from './Todolist';
 import {v1} from 'uuid';
 import {AddItemForm} from './Components/AddItemForm';
+import {TaskPriorities, TaskStatuses, TaskType} from './api/ todolist-api';
+import {FilterValuesType, TodolistDomainType} from './state/todolists-reducer';
 
-export type FilterValuesType = "all" | "active" | "completed";
-export type TodolistType = {
-    id: string
-    title: string
-    filter: FilterValuesType
-}
 
 export type TasksStateType = {
     [key: string]: Array<TaskType>
@@ -24,7 +20,18 @@ function App() {
     }
 
     function addTask(title: string, todolistId: string) {
-        let task = {id: v1(), title: title, isDone: false};
+        let task = {
+            id: v1(),
+            title: title,
+            status: TaskStatuses.New,
+            todoListId: todolistId,
+            startDate: '',
+            order: 0,
+            addedDate: '',
+            description: '',
+            deadline: '',
+            priority: TaskPriorities.Low
+        };
         let todolistTasks = tasks[todolistId];
         tasks[todolistId] = [task, ...todolistTasks];
         setTasks({...tasks});
@@ -38,14 +45,15 @@ function App() {
         }
     }
 
-    function changeStatus(id: string, isDone: boolean, todolistId: string) {
+    function changeStatus(id: string, status: TaskStatuses, todolistId: string) {
         let todolistTasks = tasks[todolistId];
         let task = todolistTasks.find(t => t.id === id);
         if (task) {
-            task.isDone = isDone;
+            task.status = status;
             setTasks({...tasks});
         }
     }
+
     function changeTaskTitle(id: string, newTitle: string, todolistId: string) {
         let todolistTasks = tasks[todolistId];
         let task = todolistTasks.find(t => t.id === id);
@@ -60,6 +68,7 @@ function App() {
         delete tasks[id];
         setTasks({...tasks});
     }
+
     function changeTodolistTitle(id: string, title: string) {
         const todolist = todolists.find(tl => tl.id === id);
         if (todolist) {
@@ -71,25 +80,78 @@ function App() {
     let todolistId1 = v1();
     let todolistId2 = v1();
 
-    let [todolists, setTodolists] = useState<Array<TodolistType>>([
-        {id: todolistId1, title: "What to learn", filter: "all"},
-        {id: todolistId2, title: "What to buy", filter: "all"}
+    let [todolists, setTodolists] = useState<Array<TodolistDomainType>>([
+        {
+            id: todolistId1, title: 'What to learn', filter: 'all', addedDate: '',
+            order: 0
+        },
+        {
+            id: todolistId2, title: 'What to buy', filter: 'all', addedDate: '',
+            order: 0
+        }
     ])
 
     let [tasks, setTasks] = useState<TasksStateType>({
         [todolistId1]: [
-            {id: v1(), title: "HTML&CSS", isDone: true},
-            {id: v1(), title: "JS", isDone: true}
+            {
+                id: v1(),
+                title: 'HTML&CSS',
+                status: TaskStatuses.Completed,
+                todoListId: todolistId1,
+                startDate: '',
+                order: 0,
+                addedDate: '',
+                description: '',
+                deadline: '',
+                priority: TaskPriorities.Low
+            },
+            {
+                id: v1(),
+                title: 'JS',
+                status: TaskStatuses.Completed,
+                todoListId: todolistId1,
+                startDate: '',
+                order: 0,
+                addedDate: '',
+                description: '',
+                deadline: '',
+                priority: TaskPriorities.Low
+            }
         ],
         [todolistId2]: [
-            {id: v1(), title: "Milk", isDone: true},
-            {id: v1(), title: "React Book", isDone: true}
+            {
+                id: v1(),
+                title: 'Milk',
+                status: TaskStatuses.Completed,
+                todoListId: todolistId2,
+                startDate: '',
+                order: 0,
+                addedDate: '',
+                description: '',
+                deadline: '',
+                priority: TaskPriorities.Low
+            },
+            {
+                id: v1(),
+                title: 'React Book',
+                status: TaskStatuses.Completed,
+                todoListId: todolistId2,
+                startDate: '',
+                order: 0,
+                addedDate: '',
+                description: '',
+                deadline: '',
+                priority: TaskPriorities.Low
+            }
         ]
     });
 
     function addTodolist(title: string) {
         let newTodolistId = v1();
-        let newTodolist: TodolistType = {id: newTodolistId, title: title, filter: 'all'};
+        let newTodolist: TodolistDomainType = {
+            id: newTodolistId, title: title, filter: 'all', addedDate: '',
+            order: 0
+        };
         setTodolists([newTodolist, ...todolists]);
         setTasks({
             ...tasks,
@@ -99,17 +161,17 @@ function App() {
 
     return (
         <div className="App">
-            <AddItemForm addItem={addTodolist} />
+            <AddItemForm addItem={addTodolist}/>
             {
                 todolists.map(tl => {
                     let allTodolistTasks = tasks[tl.id];
                     let tasksForTodolist = allTodolistTasks;
 
-                    if (tl.filter === "active") {
-                        tasksForTodolist = allTodolistTasks.filter(t => t.isDone === false);
+                    if (tl.filter === 'active') {
+                        tasksForTodolist = allTodolistTasks.filter(t => t.status === TaskStatuses.New);
                     }
-                    if (tl.filter === "completed") {
-                        tasksForTodolist = allTodolistTasks.filter(t => t.isDone === true);
+                    if (tl.filter === 'completed') {
+                        tasksForTodolist = allTodolistTasks.filter(t => t.status === TaskStatuses.Completed);
                     }
 
                     return <Todolist
