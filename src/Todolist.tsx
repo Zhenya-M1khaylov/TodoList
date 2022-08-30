@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import {Delete} from '@mui/icons-material';
 import {TaskStatuses, TaskType} from './api/todolist-api';
-import {FilterValuesType} from './state/todolists-reducer'
+import {FilterValuesType, removeTodolistTC} from './state/todolists-reducer'
 import {useDispatch} from 'react-redux';
 import {setTaskTC} from './state/tasks-reducer';
 import { Task } from './Components/Task';

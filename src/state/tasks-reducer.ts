@@ -35,6 +35,8 @@ export type ChangeTaskTitleActionType = {
     title: string
 }
 
+export type TasksActionType = ActionsType
+
 type ActionsType = RemoveTaskActionType
     | ChangeTaskStatusActionType
     | ChangeTaskTitleActionType
@@ -113,10 +115,7 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
             return ({...state});
         }
         case 'ADD-TODOLIST': {
-            return {
-                ...state,
-                [action.todolistId]: []
-            }
+            return {...state, [action.todolist.id]: []}
         }
         case 'REMOVE-TODOLIST': {
             const copyState = {...state};
@@ -189,5 +188,4 @@ export const updateStatusTaskTC = (todolistId: string, taskId: string, status: T
                 dispatch(changeTaskStatusAC(taskId, status, todolistId))
             })
     }
-
 }
